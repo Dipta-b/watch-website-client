@@ -1,6 +1,7 @@
-import watch_one from '../../assets/watch-one.jpg'
-
-
+import carousel_one from '../../assets/carousel-one.jpg'
+import carousel_two from '../../assets/carousel-two.jpg';
+import carousel_three from '../../assets/carousel-three.jpg';
+import carousel_four from '../../assets/carousel-four.jpg';
 
 const Carousel = () => {
     return (
@@ -8,7 +9,7 @@ const Carousel = () => {
             {/* Slide 1 */}
             <div id="slide1" className="carousel-item relative w-full group">
                 <img
-                    src={watch_one}
+                    src={carousel_one}
                     className="w-full h-full object-cover"
                     alt="Slide 1"
                 />
@@ -26,7 +27,7 @@ const Carousel = () => {
             {/* Slide 2 */}
             <div id="slide2" className="carousel-item relative w-full group">
                 <img
-                    src="https://img.daisyui.com/images/stock/photo-1609621838510-5ad474b7d25d.webp"
+                    src={carousel_two}
                     className="w-full h-full object-cover"
                     alt="Slide 2"
                 />
@@ -44,7 +45,7 @@ const Carousel = () => {
             {/* Slide 3 */}
             <div id="slide3" className="carousel-item relative w-full group">
                 <img
-                    src="https://img.daisyui.com/images/stock/photo-1414694762283-acccc27bca85.webp"
+                    src={carousel_three}
                     className="w-full h-full object-cover"
                     alt="Slide 3"
                 />
@@ -62,7 +63,7 @@ const Carousel = () => {
             {/* Slide 4 */}
             <div id="slide4" className="carousel-item relative w-full group">
                 <img
-                    src="https://img.daisyui.com/images/stock/photo-1665553365602-b2fb8e5d1707.webp"
+                    src={carousel_four}
                     className="w-full h-full object-cover"
                     alt="Slide 4"
                 />

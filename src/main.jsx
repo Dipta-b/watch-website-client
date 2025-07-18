@@ -5,8 +5,11 @@ import App from './App.jsx'
 import '@fontsource/inter';
 import { RouterProvider } from 'react-router-dom';
 import router from './router/router.jsx';
+import AuthProvider from './components/providers/AuthProvider.jsx';
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <RouterProvider router={router}></RouterProvider>
+    <AuthProvider>
+      <RouterProvider router={router}></RouterProvider>
+    </AuthProvider>
   </StrictMode>,
 )
