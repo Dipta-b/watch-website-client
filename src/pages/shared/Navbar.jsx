@@ -5,6 +5,8 @@ import useAuth from '../../components/hooks/useAuth';
 const Navbar = () => {
     const { user, signOutUser } = useAuth();
 
+    const admin = user?.email;
+    const isAdmin = 'diptabanik0@gmail.com' === admin;
     const handleSignOut = () => {
         signOutUser()
 
@@ -15,6 +17,8 @@ const Navbar = () => {
             <NavLink to="/">Home</NavLink>
             <NavLink to="/portfolio">Portfolio</NavLink>
             <NavLink to="/about">About</NavLink>
+            <NavLink to="/my-cart">Cart</NavLink>
+            {isAdmin && <NavLink to="/add-product">Add Product</NavLink>}
         </div>
     );
 

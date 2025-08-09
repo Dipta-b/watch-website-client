@@ -1,55 +1,35 @@
-import React, { useState } from "react";
-import { IoMdHeartEmpty } from "react-icons/io";
-import { HiArrowsUpDown } from "react-icons/hi2";
-import { IoEyeOutline } from "react-icons/io5";
+import React, { useEffect, useState } from "react";
 import watch from "../../assets/watch-one.jpg";
+import imageOne from "../../assets/best-selling-images/image-one.jpg";
+import ProductCard from "./ProductCard";
+import { Link } from "react-router-dom";
+import AllProducts from "./AllProducts";
 
 const BestSellingWatches = () => {
-    const [isHovered, setIsHovered] = useState(false);
 
+    const [watches, setWatches] = useState([]);
+    //fetching watches data
+    useEffect(() => {
+        fetch('http://localhost:5000/watches?limit=4')
+            .then(res => res.json())
+            .then(data => {
+
+                setWatches(data);
+            })
+    }, [])
     return (
-        <div className="mt-16 flex justify-center">
-            <div className="w-96">
-                <h2 className="font-bold text-4xl mb-6 text-center">Best Selling</h2>
+        <div className="mt-16 px-4">
+            <div className="flex justify-between items-center">
+                <h2 className="font-bold text-4xl mb-10 text-center">Best Selling</h2>
+                <Link to="/all-best-selling-products">View all</Link>
+            </div>
 
-                {/* Card */}
-                <div
-                    className={`relative bg-base-100 shadow-xl overflow-hidden rounded-xl group ${isHovered ? "border border-solid border-yellow-400" : "border border-transparent"}`}
-                    onMouseEnter={() => setIsHovered(true)}
-                    onMouseLeave={() => setIsHovered(false)}
-                >
-                    {/* Image Container */}
-                    <div className="relative h-64 w-full overflow-hidden">
-                        {/* Default Image */}
-                        <img
-                            src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
-                            alt="Product"
-                            className={`absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-in-out ${isHovered ? "-translate-x-full" : "translate-x-0"
-                                }`}
-                        />
+            {/* Responsive Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mx-auto">
+                {
+                    watches.map((watch) => <>   <ProductCard watch={watch} key={watch._id}></ProductCard></>)
+                }
 
-                        {/* Hover Image */}
-                        <img
-                            src={watch}
-                            alt="Product Hover"
-                            className={`absolute inset-0 w-full h-full  object-cover transition-transform duration-500 ease-in-out ${isHovered ? "translate-x-0" : "translate-x-full"
-                                }`}
-                        />
-
-
-                    </div>
-
-                    {/* Card Body */}
-                    <div className="p-4 flex items-center justify-center flex-wrap">
-                        <h2 className="text-xl font-semibold">Premium Shoes</h2>
-                        <p className="text-gray-600 mt-1">
-                            If a dog chews shoes whose shoes does he choose?
-                        </p>
-                        <div className="mt-4 flex justify-end">
-                            <button className="btn btn-primary">Add To Cart</button>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     );

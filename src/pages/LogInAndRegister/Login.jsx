@@ -1,10 +1,13 @@
 import React from 'react';
 import loginAnimation from '../../assets/login/Login.json';
 import Lottie from 'lottie-react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import useAuth from '../../components/hooks/useAuth';
 
 const Login = () => {
+    const location = useLocation();
+    const navigate = useNavigate();
+    const from = location?.state || '/';
     const {
         signInuser,
         signInWithGoogle,
@@ -24,6 +27,7 @@ const Login = () => {
                 console.log(user);
                 alert('User signed in');
                 form.reset();
+                navigate(from);
             })
             .catch(error => {
                 alert(error.message);
