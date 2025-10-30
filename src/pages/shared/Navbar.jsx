@@ -18,6 +18,8 @@ const Navbar = () => {
             <NavLink to="/portfolio">Portfolio</NavLink>
             <NavLink to="/about">About</NavLink>
             <NavLink to="/my-cart">Cart</NavLink>
+            <NavLink to="/coverage">Coverage</NavLink>
+
             {isAdmin && <NavLink to="/add-product">Add Product</NavLink>}
         </div>
     );

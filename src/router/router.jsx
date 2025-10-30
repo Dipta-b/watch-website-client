@@ -10,6 +10,7 @@ import AllProducts from "../pages/BestSelling/AllProducts";
 import Update from "../pages/Update/Update";
 import PrivateRoutes from "./PrivateRoutes";
 import Cart from "../pages/Cart/Cart";
+import CoveragePage from "../pages/CoveragePage/CoveragePage";
 
 
 
@@ -48,7 +49,11 @@ const router = createBrowserRouter([
             {
                 path: 'my-cart',
                 element: <PrivateRoutes><Cart></Cart></PrivateRoutes>
-            }
+            },
+            {
+                path: 'coverage',
+                element: <CoveragePage></CoveragePage>
+            },
         ]
     },
 ]);

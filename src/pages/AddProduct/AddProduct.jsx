@@ -1,9 +1,9 @@
 import axios from 'axios';
-import React from 'react';
+import React, { useState } from 'react';
 import Swal from 'sweetalert2';
 
 const AddProduct = () => {
-
+    const [productProfilePic, setproductProfilePic] = useState("");
     const handleAddproduct = e => {
         e.preventDefault();
         const from = e.target;
@@ -15,7 +15,8 @@ const AddProduct = () => {
         const customerName = from.customerName.value;
         const fullDescription = from.fullDescription.value;
         const image = from.image.value;
-        const product = { type, avilability, watchName, shortDetails, price, customerName, fullDescription, image };
+
+        const product = { type, avilability, watchName, shortDetails, price, customerName, fullDescription, image, productProfilePic, createdAt: new Date() };
 
         axios.post('http://localhost:5000/watches', product)
             .then(res => {
@@ -30,6 +31,16 @@ const AddProduct = () => {
                     });
                 }
             })
+
+    }
+
+    const handleImageUpload = async (e) => {
+        const image = (e.target.files[0])
+        const formData = new FormData();
+        formData.append("image", image);
+        const imageUploadUrl = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_image_upload_key}`
+        const res = await axios.post(imageUploadUrl, formData)
+        setproductProfilePic(res.data.data.url)
 
     }
 
@@ -127,7 +138,14 @@ const AddProduct = () => {
                             type="text"
                             placeholder="Paste image URL here"
                             className="input input-bordered w-full text-black"
-                            required
+
+                        />
+                        <label className="label">Profile Picture</label>
+                        <input
+                            onChange={handleImageUpload}
+                            type="file"
+                            className="input"
+                            placeholder="Upload for direct png/jpg format"
                         />
                     </div>
                     <div className="form-control">

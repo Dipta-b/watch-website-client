@@ -6,15 +6,34 @@ import bgUrl from "../../assets/best-selling-images/tiny-bg-all-products-page.jp
 import axios from "axios";
 import Swal from "sweetalert2";
 import useAuth from "../../components/hooks/useAuth";
+import { sortWatches } from "../sortWatches";
+
+// MUI imports for styled select
+import OutlinedInput from '@mui/material/OutlinedInput';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+    PaperProps: {
+        style: {
+            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+            width: 250,
+        },
+    },
+};
 
 const AllProducts = () => {
     const loadedWatches = useLoaderData() || [];
     const [watches, setWatches] = useState(loadedWatches);
     const { user } = useAuth();
     const isAdmin = user?.email === "diptabanik0@gmail.com";
-
+    const [cart, setCart] = useState([]);
     const [hoveredIndex, setHoveredIndex] = useState(null);
     const [borderIndex, setBorderIndex] = useState(null);
+    const [sortType, setSortType] = useState(""); // new state for sorting
 
     const handleDelete = async (id) => {
         const result = await Swal.fire({
@@ -40,9 +59,17 @@ const AllProducts = () => {
 
     const handleAddToCart = (selectedWatch) => {
         if (!user?.email) {
-            Swal.fire("Error!", "You must be logged in to add to cart.", "error");
+            Swal.fire("Error!", "You must be logged in for add to cart.");
             return;
         }
+
+        const exists = cart.some((item) => item._id === selectedWatch._id);
+        if (exists) {
+            Swal.fire("Info", "Product is already in cart!");
+            return;
+        }
+
+        setCart([...cart, selectedWatch]);
 
         const watchData = {
             ...selectedWatch,
@@ -66,6 +93,9 @@ const AllProducts = () => {
             });
     };
 
+    // Sort watches using the utility function
+    const sortedWatches = sortWatches(watches, sortType);
+
     return (
         <div>
             {/* Banner */}
@@ -79,16 +109,48 @@ const AllProducts = () => {
                 </div>
             </div>
 
+            {/* Sort Dropdown (MUI styled) */}
+            <div className="w-3/4 mx-auto mt-6 mb-4 flex justify-end">
+                <FormControl sx={{ width: 250 }}>
+                    <Select
+                        value={sortType}
+                        onChange={(e) => setSortType(e.target.value)}
+                        displayEmpty
+                        input={<OutlinedInput sx={{ color: "white", borderColor: "white" }} />}
+                        MenuProps={MenuProps}
+                        sx={{
+                            color: "white", // text color
+                            ".MuiOutlinedInput-notchedOutline": { borderColor: "white" }, // border color
+                            "&:hover .MuiOutlinedInput-notchedOutline": { borderColor: "yellow" }, // hover border
+                            backgroundColor: "#1e1e1e", // dark gray background so it shows on black
+                        }}
+                        renderValue={(selected) => {
+                            if (!selected) return <em style={{ color: "#aaa" }}>Sort By</em>;
+                            switch (selected) {
+                                case "priceLowToHigh": return "Price: Low to High";
+                                case "priceHighToLow": return "Price: High to Low";
+                                case "newest": return "Newest";
+                                default: return "Sort By";
+                            }
+                        }}
+                    >
+                        <MenuItem value=""><em style={{ color: "#aaa" }}>Sort By</em></MenuItem>
+                        <MenuItem value="priceLowToHigh">Price: Low to High</MenuItem>
+                        <MenuItem value="priceHighToLow">Price: High to Low</MenuItem>
+                        <MenuItem value="newest">Newest</MenuItem>
+                    </Select>
+                </FormControl>
+            </div>
+
+
             {/* Grid */}
-            <div className="w-3/4 grid grid-cols-1 md:grid-cols-3 gap-6 mx-auto mt-10 mb-4">
-                {watches.map((watch, index) => (
+            <div className="w-3/4 grid grid-cols-1 md:grid-cols-3 gap-6 mx-auto mt-2 mb-4">
+                {sortedWatches.map((watch, index) => (
                     <div
                         key={watch._id}
                         onMouseEnter={() => setBorderIndex(index)}
                         onMouseLeave={() => setBorderIndex(null)}
-                        className={`relative bg-base-100 shadow-xl overflow-hidden h-[510px] duration-300 ${borderIndex === index
-                                ? "border border-yellow-400"
-                                : "border border-transparent"
+                        className={`relative bg-base-100 shadow-xl overflow-hidden h-[510px] duration-300 ${borderIndex === index ? "border border-yellow-400" : "border border-transparent"
                             }`}
                     >
                         {/* Image Section */}
@@ -117,12 +179,9 @@ const AllProducts = () => {
                         <div className="flex flex-col justify-between items-center p-4 h-[250px] bg-black text-white">
                             <div className="text-center space-y-2">
                                 <p className="uppercase text-sm text-yellow-400">{watch?.type}</p>
-                                <h2 className="text-xl font-semibold">
-                                    {watch?.watchName || "Premium Watch"}
-                                </h2>
+                                <h2 className="text-xl font-semibold">{watch?.watchName || "Premium Watch"}</h2>
                                 <p className="text-gray-400 text-sm leading-tight">
-                                    {watch?.description ||
-                                        "If a dog chews shoes whose shoes does he choose?"}
+                                    {watch?.description || "If a dog chews shoes whose shoes does he choose?"}
                                 </p>
                                 <p className="font-semibold">Price: ${watch?.price || "N/A"}.00</p>
 
