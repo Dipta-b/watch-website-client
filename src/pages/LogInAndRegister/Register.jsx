@@ -3,6 +3,7 @@ import React from 'react'
 import registerAnimation from '../../assets/login/register.json'
 import { Link } from 'react-router-dom'
 import useAuth from '../../components/hooks/useAuth'
+import axios from 'axios'
 
 const Register = () => {
     const { createUser, updateUserProfile, user } = useAuth();
@@ -13,22 +14,37 @@ const Register = () => {
         const email = form.email.value;
         const password = form.password.value;
         const photoURL = form.photoURL.value;
-        // console.log(name, email, password, photoURL)
+
         createUser(email, password)
             .then(result => {
                 const user = result.user;
-                console.log(user)
+                console.log(user);
+
+                // Update Firebase profile
                 updateUserProfile(name, photoURL)
                     .then(() => {
-                        alert('user created and profile updated');
+                        alert('User created and profile updated');
+
+                        // **Send user to backend**
+                        axios.post('http://localhost:5000/users', {
+                            name,
+                            email,
+                            role: 'user', // default role
+                            approved: false // pending approval
+                        })
+                            .then(res => {
+                                console.log('User saved in DB:', res.data);
+                            })
+                            .catch(err => console.error('DB Error:', err));
+
                         form.reset();
                     })
+                    .catch(err => console.error(err));
             })
             .catch(error => {
-                alert(error.message)
-            })
-
-    }
+                alert(error.message);
+            });
+    };
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-100 to-white flex items-center justify-center px-4">
@@ -96,7 +112,7 @@ const Register = () => {
 
                         <p className="text-sm text-center text-gray-500 mt-4">
                             Already have an account?{" "}
-                            <Link to="/login" className="text-blue-600 hover:underline">
+                            <Link to="/signin" className="text-blue-600 hover:underline">
                                 Login here
                             </Link>
                         </p>

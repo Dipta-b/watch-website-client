@@ -1,16 +1,16 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import useAuth from '../../components/hooks/useAuth';
+import axios from 'axios';
 
 const Navbar = () => {
-    const { user, signOutUser } = useAuth();
-
-    const admin = user?.email;
-    const isAdmin = 'diptabanik0@gmail.com' === admin;
+    const { user, signOutUser, admin } = useAuth();
     const handleSignOut = () => {
         signOutUser()
 
     }
+
+
 
     const links = (
         <div className="flex space-x-4 	">
@@ -20,7 +20,14 @@ const Navbar = () => {
             <NavLink to="/my-cart">Cart</NavLink>
             <NavLink to="/coverage">Coverage</NavLink>
 
-            {isAdmin && <NavLink to="/add-product">Add Product</NavLink>}
+            {
+                admin ? <>
+                    <NavLink to="/pending-orders">Pending Orders</NavLink>
+                    <NavLink to="/add-product">Add Product</NavLink>
+                    <NavLink to="/make-admin">Make Admin</NavLink>
+                </> : ''
+            }
+
         </div>
     );
 
@@ -68,7 +75,7 @@ const Navbar = () => {
                 {
                     user ? <button onClick={handleSignOut} className="btn btn-ghost btn-circle">
                         Sign Out
-                    </button> : <NavLink to="/login">
+                    </button> : <NavLink to="/signin">
                         <button className="btn btn-ghost btn-circle">
                             Login
                         </button>

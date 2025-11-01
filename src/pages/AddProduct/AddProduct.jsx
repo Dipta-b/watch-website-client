@@ -1,8 +1,10 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import Swal from 'sweetalert2';
+import useAuth from '../../components/hooks/useAuth';
 
 const AddProduct = () => {
+    const { token } = useAuth();
     const [productProfilePic, setproductProfilePic] = useState("");
     const handleAddproduct = e => {
         e.preventDefault();
@@ -18,7 +20,9 @@ const AddProduct = () => {
 
         const product = { type, avilability, watchName, shortDetails, price, customerName, fullDescription, image, productProfilePic, createdAt: new Date() };
 
-        axios.post('http://localhost:5000/watches', product)
+        axios.post('http://localhost:5000/watches', product, {
+            headers: { Authorization: `Bearer ${token}` }
+        })
             .then(res => {
                 if (res.data.insertedId) {
                     Swal.fire({

@@ -1,9 +1,11 @@
 import axios from 'axios';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import useAuth from '../../components/hooks/useAuth';
 
 const Update = () => {
     const { id } = useParams();
+    const { token } = useAuth();
     const navigate = useNavigate();
     const handleUpdateProduct = e => {
         e.preventDefault();
@@ -18,7 +20,9 @@ const Update = () => {
         const image = from.image.value;
         const updatedPart = { type, avilability, watchName, shortDetails, price, customerName, fullDescription, image };
 
-        axios.put(`http://localhost:5000/watches/${id}`, updatedPart)
+        axios.put(`http://localhost:5000/watches/${id}`, updatedPart, {
+            headers: { Authorization: `Bearer ${token}` }
+        })
             .then(res => {
 
                 if (res.data.modifiedCount) {

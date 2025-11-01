@@ -11,6 +11,8 @@ import Update from "../pages/Update/Update";
 import PrivateRoutes from "./PrivateRoutes";
 import Cart from "../pages/Cart/Cart";
 import CoveragePage from "../pages/CoveragePage/CoveragePage";
+import MakeAdminButton from "../pages/Admin/MakeAdminButton/MakeAdminButton";
+import PendingProducts from "../pages/Admin/PendingProducts/PendingProducts";
 
 
 
@@ -26,7 +28,7 @@ const router = createBrowserRouter([
                 element: <Home></Home>
             },
             {
-                path: 'login',
+                path: 'signin',
                 element: <Login></Login>
             },
             {
@@ -35,7 +37,7 @@ const router = createBrowserRouter([
             },
             {
                 path: 'add-product',
-                element: <PrivateRoutes> <AddProduct></AddProduct></PrivateRoutes>
+                element: <AddProduct></AddProduct>
             },
             {
                 path: 'all-best-selling-products',
@@ -53,6 +55,14 @@ const router = createBrowserRouter([
             {
                 path: 'coverage',
                 element: <CoveragePage></CoveragePage>
+            },
+            {
+                path: 'make-admin',
+                element: <MakeAdminButton></MakeAdminButton>
+            },
+            {
+                path: 'pending-orders',
+                element: <PendingProducts></PendingProducts>
             },
         ]
     },

@@ -28,7 +28,7 @@ const MenuProps = {
 const AllProducts = () => {
     const loadedWatches = useLoaderData() || [];
     const [watches, setWatches] = useState(loadedWatches);
-    const { user } = useAuth();
+    const { user, token } = useAuth();
     const isAdmin = user?.email === "diptabanik0@gmail.com";
     const [cart, setCart] = useState([]);
     const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -48,7 +48,9 @@ const AllProducts = () => {
 
         if (result.isConfirmed) {
             try {
-                await axios.delete(`http://localhost:5000/watches/${id}`);
+                await axios.delete(`http://localhost:5000/watches/${id}`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
                 Swal.fire("Deleted!", "Your watch has been deleted.", "success");
                 setWatches((prev) => prev.filter((item) => item._id !== id));
             } catch (error) {
